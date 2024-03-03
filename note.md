@@ -26,4 +26,11 @@ python -m twine upload dist/*
 pip install appget
 pip uninstall --yes appget
 
+#测试
+python -m pip install --upgrade pytest
+python -m pytest --version
+
+#命令行着色
+pip install colorama
+
 ```
