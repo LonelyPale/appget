@@ -22,3 +22,8 @@ def is_darwin() -> bool:
 
 def is_windows() -> bool:
     return OS == WINDOWS
+
+
+def is_root():
+    # 在Unix-like系统中，root用户的用户ID通常为0。
+    return os.geteuid() == 0
