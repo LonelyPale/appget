@@ -60,28 +60,38 @@ class AppGet(App):
                         class_path = f'{obj.__module__}.{obj.__qualname__}'
                         log.error(f'App class must set "name": class_path={class_path}')
 
-    def install(self):
+    def install(self, appname):
         log.info("install")
 
-    def uninstall(self):
+    def uninstall(self, appname):
         log.info("uninstall")
 
     def update(self):
         log.info("update")
 
-    def upgrade(self):
+    def upgrade(self, appname):
         log.info("upgrade")
 
     def list(self):
-        log.info("list")
+        for app in self.apps.values():
+            log.info(f'{app.name} - {app.desc}')
 
     def info(self, appname):
-        log.info("info")
-        for name, app in self.apps.items():
-            app.install()
+        # TODO: 应显示已安装app
+        if appname in self.apps:
+            app = self.apps[appname]
+            log.info(f'Name: {app.name}')
+            log.info(f'Description: {app.desc}')
+            log.info(f'Homepage: {app.homepage}')
+            log.info(f'License: {app.license}')
+        else:
+            log.info("not found")
 
-    def search(self):
-        log.info("search")
+    def search(self, appname):
+        if appname in self.apps:
+            self.info(appname)
+        else:
+            log.info("not found")
 
 
 @click.group()
@@ -102,12 +112,8 @@ def cli(ctx):
 def install(ctx, name, count, appname):
     """
     asdf 测试 docs
-    :param ctx:
-    :param name:
-    :param count:
-    :return:
     """
-    ctx.obj['APPGET'].install()
+    ctx.obj['APPGET'].install(appname)
     return
     try:
         statinfo = os.stat(APPGET_HOME)
@@ -125,9 +131,10 @@ def install(ctx, name, count, appname):
 
 
 @cli.command()
+@click.argument('appname')
 @click.pass_context
-def uninstall(ctx):
-    ctx.obj['APPGET'].uninstall()
+def uninstall(ctx, appname):
+    ctx.obj['APPGET'].uninstall(appname)
     return
     cmd.run(f'rm -rf {APPGET_HOME}')
 
@@ -141,9 +148,10 @@ def update(ctx):
 
 
 @cli.command()
+@click.argument('appname')
 @click.pass_context
-def upgrade(ctx):
-    ctx.obj['APPGET'].upgrade()
+def upgrade(ctx, appname):
+    ctx.obj['APPGET'].upgrade(appname)
 
 
 @cli.command(name='list')
@@ -156,10 +164,11 @@ def list_alias(ctx):
 @click.argument('appname')
 @click.pass_context
 def info(ctx, appname):
-    ctx.obj['APPGET'].info()
+    ctx.obj['APPGET'].info(appname)
 
 
 @cli.command()
+@click.argument('appname')
 @click.pass_context
-def search(ctx):
-    ctx.obj['APPGET'].search()
+def search(ctx, appname):
+    ctx.obj['APPGET'].search(appname)

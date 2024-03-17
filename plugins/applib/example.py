@@ -3,9 +3,9 @@ from appget import App
 
 class MyExample(App):
     name = 'my-example'
-    desc = 'example'
-    homepage = ''
-    license = ''
+    desc = 'MyExample desc'
+    homepage = 'MyExample homepage'
+    license = 'MyExample license'
 
     def __init__(self):
         super().__init__()

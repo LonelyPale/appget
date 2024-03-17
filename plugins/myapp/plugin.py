@@ -3,9 +3,9 @@ from appget import App
 
 class MyPlugin(App):
     name = 'my-plugin'
-    desc = 'plugin'
-    homepage = ''
-    license = ''
+    desc = 'MyPlugin desc'
+    homepage = 'MyPlugin homepage'
+    license = 'MyPlugin license'
 
     def __init__(self):
         super().__init__()
