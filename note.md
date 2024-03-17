@@ -47,9 +47,12 @@ pip uninstall fire
 pip install colorama
 #日志着色
 pip install colorlog
+#配置文件toml
+pip install toml
 
 # 测试本地执行
 PYTHONPATH=./src python -m appget
+PYTHONPATH=/usr/local/app/appget/lib python3 -m appget
 
 
 

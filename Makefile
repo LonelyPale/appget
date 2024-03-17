@@ -4,7 +4,7 @@ init:
 	#python -m pip install -r requirements-dev.txt
 	python -m pip install --upgrade build twine
 
-publish:
+publish: clean
 	python -m build
 	python -m twine upload --config-file .pypirc-my dist/*
 

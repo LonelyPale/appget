@@ -15,7 +15,8 @@ handler.setFormatter(colorlog.ColoredFormatter(fmt=log_format, log_colors=log_co
 
 logger = colorlog.getLogger(__name__)
 logger.addHandler(handler)
-logger.setLevel(colorlog.DEBUG)
+logger.setLevel(colorlog.INFO)  # prod
+logger.setLevel(colorlog.DEBUG)  # dev
 
 
 def debug(msg, *args, **kwargs):

@@ -1,36 +1,87 @@
 import os
+import sys
+import inspect
+import importlib
+
+import toml
 import click
 
-from . import log, cmd, app
+from . import log, cmd
+from .app import App
 
 BIN_HOME = '/usr/local/bin'
-APP_HOME = '/usr/local/app'
-APPGET_HOME = '/usr/local/app/appget'
-APPGET_BIN = '/usr/local/app/appget/bin'
-APPGET_LIB = '/usr/local/app/appget/lib'
+# APP_HOME = '/usr/local/app'  # prod
+APP_HOME = os.environ['HOME'] + '/PycharmProjects'  # dev
+APPGET_HOME = f'{APP_HOME}/appget'
+APPGET_BIN = f'{APPGET_HOME}/bin'
+APPGET_LIB = f'{APPGET_HOME}/lib'
+APPGET_PLUGINS = f'{APPGET_HOME}/plugins'
+APPGET_CONFIG = f'{APPGET_HOME}/config/appget.toml'
+
+APPLIB_MODULE = 'applib'
+MYAPP_MODULE = 'myapp'
 
 
-class AppGet(app.App):
+class AppGet(App):
+    # metadata 元数据
+    name = 'appget'  # 名称
+    desc = 'A tool for installing custom software'  # 描述
+    homepage = 'https://github.com/lonelypale/appget'  # 主页
+    license = 'MIT'  # 许可证
+
+    # 其他属性
+    config = {}  # 配置文件字典
+    apps = {}  # app安装脚本类
+
+    def __init__(self):
+        super().__init__()
+        self.__load_config()
+        self.__load_app_class()
+
+    def __load_config(self):
+        if os.path.exists(APPGET_CONFIG):
+            self.config = toml.load(APPGET_CONFIG)
+        else:
+            log.debug(f'config file does not exist: {APPGET_CONFIG}')
+
+    def __load_app_class(self):
+        sys.path.append(APPGET_PLUGINS)
+        for package in [APPLIB_MODULE, MYAPP_MODULE]:
+            module = importlib.import_module(package)
+            for name, obj in inspect.getmembers(module):
+                if inspect.isclass(obj) and issubclass(obj, App) and obj != App:
+                    if hasattr(obj, 'name'):
+                        if obj.name not in self.apps:
+                            self.apps[obj.name] = obj()  # 实例化App类
+                        else:
+                            class_path = f'{obj.__module__}.{obj.__qualname__}'
+                            log.error(f'The app name already exists: name={obj.name} class_path={class_path}')
+                    else:
+                        class_path = f'{obj.__module__}.{obj.__qualname__}'
+                        log.error(f'App class must set "name": class_path={class_path}')
+
     def install(self):
-        print('install')
+        log.info("install")
 
     def uninstall(self):
-        print('uninstall')
+        log.info("uninstall")
 
     def update(self):
-        print('update')
+        log.info("update")
 
     def upgrade(self):
-        print('upgrade')
+        log.info("upgrade")
 
     def list(self):
-        print('list')
+        log.info("list")
 
-    def info(self):
-        print('info')
+    def info(self, appname):
+        log.info("info")
+        for name, app in self.apps.items():
+            app.install()
 
     def search(self):
-        print('search')
+        log.info("search")
 
 
 @click.group()
@@ -46,8 +97,9 @@ def cli(ctx):
 @cli.command()
 @click.option("--count", default=1, help="Number of greetings.")
 @click.option("--name", prompt="Your name", help="The person to greet.")
+@click.argument('appname')
 @click.pass_context
-def install(ctx, name, count):
+def install(ctx, name, count, appname):
     """
     asdf 测试 docs
     :param ctx:
@@ -101,8 +153,9 @@ def list_alias(ctx):
 
 
 @cli.command()
+@click.argument('appname')
 @click.pass_context
-def info(ctx):
+def info(ctx, appname):
     ctx.obj['APPGET'].info()
 
 

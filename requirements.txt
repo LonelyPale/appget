@@ -1,0 +1,4 @@
+colorama~=0.4.6
+colorlog~=6.8.2
+toml~=0.10.2
+click~=8.1.7

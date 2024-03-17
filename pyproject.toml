@@ -1,23 +1,27 @@
 [project]
 name = "appget" # Required
-version = "0.1.3" # Required
+version = "0.1.5-dev2" # Required 正式版使用 0.1.5 三位数，测试版使用 0.1.5-dev1 四位数
 description = "A package management tool" # Optional
 readme = "README.md" # Optional
 license = { file = "LICENSE" }
-requires-python = ">=3"
+requires-python = ">=3.9" # 开发使用的版本
 keywords = ["appget", "setuptools", "development"]  # Optional
-authors = [ # Optional
+authors = [# Optional
     { name = "Example Author", email = "author@example.com" },
 ]
-maintainers = [ # Optional
-  {name = "A. Great Maintainer", email = "maintainer@example.com" }
+maintainers = [# Optional
+    { name = "A. Great Maintainer", email = "maintainer@example.com" }
 ]
-classifiers = [ # Optional
+classifiers = [# Optional
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = [ # Optional
+dependencies = [# Optional
+    "toml~=0.10.2", #配置文件
+    "click~=8.1.7", #命令行解析
+    "colorama~=0.4.6", #命令行着色
+    "colorlog~=6.8.2", #日志着色
 ]
 
 [project.urls]
