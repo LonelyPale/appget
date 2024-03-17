@@ -3,6 +3,7 @@ from appget import App
 
 class MyExample(App):
     name = 'my-example'
+    version = '0.0.1'
     desc = 'MyExample desc'
     homepage = 'MyExample homepage'
     license = 'MyExample license'

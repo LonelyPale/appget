@@ -1,6 +1,6 @@
 [project]
 name = "appget" # Required
-version = "0.1.5-dev2" # Required 正式版使用 0.1.5 三位数，测试版使用 0.1.5-dev1 四位数
+version = "0.1.5-dev3" # Required 正式版使用 0.1.5 三位数，测试版使用 0.1.5-dev1 四位数
 description = "A package management tool" # Optional
 readme = "README.md" # Optional
 license = { file = "LICENSE" }

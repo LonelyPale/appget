@@ -3,6 +3,7 @@ from appget import App
 
 class MyPlugin(App):
     name = 'my-plugin'
+    version = '0.0.1'
     desc = 'MyPlugin desc'
     homepage = 'MyPlugin homepage'
     license = 'MyPlugin license'

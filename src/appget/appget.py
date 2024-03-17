@@ -25,6 +25,7 @@ MYAPP_MODULE = 'myapp'
 class AppGet(App):
     # metadata 元数据
     name = 'appget'  # 名称
+    version = '0.1.5-dev3'  # 版本
     desc = 'A tool for installing custom software'  # 描述
     homepage = 'https://github.com/lonelypale/appget'  # 主页
     license = 'MIT'  # 许可证
@@ -74,13 +75,14 @@ class AppGet(App):
 
     def list(self):
         for app in self.apps.values():
-            log.info(f'{app.name} - {app.desc}')
+            log.info(f'{app.name} --- {app.version} --- {app.desc}')
 
     def info(self, appname):
         # TODO: 应显示已安装app
         if appname in self.apps:
             app = self.apps[appname]
             log.info(f'Name: {app.name}')
+            log.info(f'Version: {app.version}')
             log.info(f'Description: {app.desc}')
             log.info(f'Homepage: {app.homepage}')
             log.info(f'License: {app.license}')
