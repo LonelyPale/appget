@@ -8,10 +8,11 @@ import click
 
 from . import log, cmd
 from .app import App
+from .utils import DEBUG
 
-BIN_HOME = '/usr/local/bin'
-# APP_HOME = '/usr/local/app'  # prod
-APP_HOME = os.environ['HOME'] + '/PycharmProjects'  # dev
+LOCAL_HOME = '/usr/local' if not DEBUG else os.environ['HOME'] + '/PycharmProjects/appget/example'
+BIN_HOME = f'{LOCAL_HOME}/bin'
+APP_HOME = f'{LOCAL_HOME}/app'
 APPGET_HOME = f'{APP_HOME}/appget'
 APPGET_BIN = f'{APPGET_HOME}/bin'
 APPGET_LIB = f'{APPGET_HOME}/lib'
@@ -46,14 +47,22 @@ class AppGet(App):
             log.debug(f'config file does not exist: {APPGET_CONFIG}')
 
     def __load_app_class(self):
+        run_name = f'{self.__class__.__name__}.{inspect.currentframe().f_code.co_name}' if DEBUG else None
+
         sys.path.append(APPGET_PLUGINS)
         for package in [APPLIB_MODULE, MYAPP_MODULE]:
             module = importlib.import_module(package)
+            if DEBUG:
+                module_path = module.__path__[0]
+                log.debug(f'{run_name}: module_path={module_path}')
+
             for name, obj in inspect.getmembers(module):
                 if inspect.isclass(obj) and issubclass(obj, App) and obj != App:
                     if hasattr(obj, 'name'):
                         if obj.name not in self.apps:
-                            self.apps[obj.name] = obj()  # 实例化App类
+                            self.apps[obj.name] = obj()  # 实例化App的子类
+                            if DEBUG:
+                                log.debug(f'{run_name}: class={obj}')
                         else:
                             class_path = f'{obj.__module__}.{obj.__qualname__}'
                             log.error(f'The app name already exists: name={obj.name} class_path={class_path}')
@@ -81,11 +90,7 @@ class AppGet(App):
         # TODO: 应显示已安装app
         if appname in self.apps:
             app = self.apps[appname]
-            log.info(f'Name: {app.name}')
-            log.info(f'Version: {app.version}')
-            log.info(f'Description: {app.desc}')
-            log.info(f'Homepage: {app.homepage}')
-            log.info(f'License: {app.license}')
+            app.info()
         else:
             log.info("not found")
 

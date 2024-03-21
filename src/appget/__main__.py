@@ -3,8 +3,7 @@
 import sys
 
 from . import appget, log
-
-DEBUG = True
+from .utils import DEBUG
 
 
 def main():

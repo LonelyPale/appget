@@ -1,5 +1,7 @@
 import colorlog
 
+from .utils import DEBUG
+
 log_format = '%(log_color)s%(message)s'
 
 log_colors = {
@@ -15,8 +17,7 @@ handler.setFormatter(colorlog.ColoredFormatter(fmt=log_format, log_colors=log_co
 
 logger = colorlog.getLogger(__name__)
 logger.addHandler(handler)
-logger.setLevel(colorlog.INFO)  # prod
-logger.setLevel(colorlog.DEBUG)  # dev
+logger.setLevel(colorlog.DEBUG) if DEBUG else logger.setLevel(colorlog.INFO)
 
 
 def debug(msg, *args, **kwargs):
