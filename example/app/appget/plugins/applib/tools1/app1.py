@@ -12,7 +12,9 @@ class MyApp1(App):
         super().__init__()
 
     def install(self):
+        super().install()
         print(f'install: {self.__class__.__name__} ... {self.__class__.__module__}.{self.__class__.__qualname__}')
 
     def uninstall(self):
+        super().uninstall()
         print(f'uninstall: {self.__class__.__name__} ...')
