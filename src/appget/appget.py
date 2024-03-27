@@ -10,14 +10,16 @@ from . import log, cmd
 from .app import App
 from .constant import *
 
+APPGET = 'APPGET'
 
-class AppGet(App):
+
+class AppGet:
     # metadata 元数据
     name = 'appget'  # 名称
     version = '0.1.5-dev3'  # 版本
     desc = 'A tool for installing custom software'  # 描述
-    homepage = 'https://github.com/lonelypale/appget'  # 主页
     license = 'MIT'  # 许可证
+    homepage = 'https://github.com/lonelypale/appget'  # 主页
 
     # 其他属性
     config = {}  # 配置文件字典
@@ -25,7 +27,6 @@ class AppGet(App):
     installed_apps_class = {}  # 已安装的app脚本类
 
     def __init__(self):
-        super().__init__()
         self.__load_config()
         self.__load_apps_class()
         self.__load_installed_apps_class()
@@ -51,7 +52,7 @@ class AppGet(App):
         run_name = f'{self.__class__.__name__}.{inspect.currentframe().f_code.co_name}' if DEBUG else None
 
         for root, dirs, files in os.walk(APP_HOME):
-            if not root.endswith(SCRIPT_DIR) or len(files) == 0:
+            if not root.endswith(APP_SCRIPT_DIR) or len(files) == 0:
                 continue
 
             # 已安装的app脚本目录.appget
@@ -89,7 +90,18 @@ class AppGet(App):
                     class_path = f'{obj.__module__}.{obj.__qualname__}'
                     log.error(f'App class must set "name": class_path={class_path}')
 
+    def show(self):
+        """显示appget安装信息"""
+        for key in ['name', 'version', 'desc', 'license', 'homepage']:
+            log.info(f'{key.capitalize()}: {getattr(self, key)}')
+
+        if DEBUG:
+            run_name = f'{self.__class__.__name__}.{inspect.currentframe().f_code.co_name}'
+            module = sys.modules[self.__module__]
+            log.debug(f'{run_name}: module={module}')
+
     def install(self, appname):
+        """安装app"""
         app = self.get_installed_app(appname)
         if app:
             log.error('already installed')
@@ -102,6 +114,7 @@ class AppGet(App):
                 log.info("not found")
 
     def uninstall(self, appname):
+        """卸载已安装app"""
         app = self.get_installed_app(appname)
         if app:
             app.uninstall()
@@ -109,11 +122,12 @@ class AppGet(App):
             log.info("not installed")
 
     def update(self):
+        """更新appget"""
         log.info("update")
         # cmd.run(f'python3 -m pip install --upgrade --target={APPGET_LIB} appget')
 
-
     def upgrade(self, appname):
+        """更新已安装app"""
         log.info("upgrade")
 
     def list(self):
@@ -153,51 +167,57 @@ class AppGet(App):
 def cli(ctx):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called by means other than the `if` block below)
     ctx.ensure_object(dict)
-    ctx.obj['APPGET'] = AppGet()
+    ctx.obj[APPGET] = AppGet()
+
+
+@cli.command()
+@click.pass_context
+def show(ctx):
+    ctx.obj[APPGET].show()
 
 
 @cli.command()
 @click.argument('appname')
 @click.pass_context
-def install(ctx, name, count, appname):
-    ctx.obj['APPGET'].install(appname)
+def install(ctx, appname):
+    ctx.obj[APPGET].install(appname)
 
 
 @cli.command()
 @click.argument('appname')
 @click.pass_context
 def uninstall(ctx, appname):
-    ctx.obj['APPGET'].uninstall(appname)
+    ctx.obj[APPGET].uninstall(appname)
 
 
 @cli.command()
 @click.pass_context
 def update(ctx):
-    ctx.obj['APPGET'].update()
+    ctx.obj[APPGET].update()
 
 
 @cli.command()
 @click.argument('appname')
 @click.pass_context
 def upgrade(ctx, appname):
-    ctx.obj['APPGET'].upgrade(appname)
+    ctx.obj[APPGET].upgrade(appname)
 
 
 @cli.command(name='list')
 @click.pass_context
 def list_alias(ctx):
-    ctx.obj['APPGET'].list()
+    ctx.obj[APPGET].list()
 
 
 @cli.command()
 @click.argument('appname')
 @click.pass_context
 def info(ctx, appname):
-    ctx.obj['APPGET'].info(appname)
+    ctx.obj[APPGET].info(appname)
 
 
 @cli.command()
 @click.argument('appname')
 @click.pass_context
 def search(ctx, appname):
-    ctx.obj['APPGET'].search(appname)
+    ctx.obj[APPGET].search(appname)

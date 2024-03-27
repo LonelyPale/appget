@@ -34,13 +34,11 @@ class App(ABC):
 
     @abstractmethod
     def uninstall(self):
-        if hasattr(self, 'name'):
-            if self.homepath.endswith(self.name):
-                shutil.rmtree(self.homepath)
-            else:
-                log.error(f'Invalid homepath: {self.homepath}')
+        appname = getattr(self, 'name')
+        if self.homepath.endswith(appname):
+            shutil.rmtree(self.homepath)
         else:
-            raise NotImplementedError(f'Subclasses must set "name", {self}')
+            log.error(f'Invalid homepath: appname={appname} homepath={self.homepath}')
 
     def info(self):
         self.__display_attributes(self.__info_attributes)
@@ -50,8 +48,7 @@ class App(ABC):
 
     def __display_attributes(self, attributes):
         for key in attributes:
-            if hasattr(self, key):
-                log.info(f'{key.capitalize()}: {getattr(self, key)}')
+            log.info(f'{key.capitalize()}: {getattr(self, key)}')
 
         if DEBUG:
             run_name = f'{self.__class__.__name__}.{inspect.currentframe().f_code.co_name}'
@@ -59,10 +56,7 @@ class App(ABC):
             log.debug(f'{run_name}: module={module}')
 
     def __homepath(self):
-        if hasattr(self, 'name'):
-            return os.path.join(APP_HOME, self.name)
-        else:
-            raise NotImplementedError(f'Subclasses must set "name", {self}')
+        return os.path.join(APP_HOME, getattr(self, 'name'))
 
     def __script_name_and_path(self):
         module_name = self.__module__

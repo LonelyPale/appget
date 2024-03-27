@@ -8,8 +8,8 @@ WINDOWS = 'windows'
 OS = platform.system().lower()
 ARCH = platform.machine().lower()
 
-SHELL = os.getenv('SHELL')
 HOME = os.getenv('HOME')
+SHELL = os.getenv('SHELL')
 
 
 def is_linux() -> bool:

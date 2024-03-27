@@ -6,9 +6,11 @@
 需要root用户
 
 # 目录
-所有软件都按照这个规则
+所有软件都按照这个规则，测试例子放在目录: ~/PycharmProjects/appget/.local
 /usr/local/bin 创建可执行文件的快捷方式
 /usr/local/app 安装软件的目录
+/usr/local/app/.config app的配置数据目录，配置和数据独立于安装目录之外，使更新等升级操作更方便，类似于前后端分离和显示与数据分离的思想
+/usr/local/app/.config/.profile 全局的文件直接放到.config目录，app私有的文件放到以appname命名的目录
 /usr/local/app/app123 已安装app
 /usr/local/app/app123/.appget 已安装app的安装脚本目录，用于卸载、查询、显示基本信息
 /usr/local/app/appget 自身的目录(特殊：无version和.appget子目录)
@@ -16,7 +18,7 @@
 /usr/local/app/appget/lib 库文件的目录，appget、applib(public)的python包和其他要用到的库安装到这个目录
 /usr/local/app/appget/plugins 插件目录
 /usr/local/app/appget/plugins/myapp 自定义私有的软件安装脚本目录myapp(private)
-/usr/local/app/appget/config/appget.toml 配置文件
+/usr/local/app/.config/appget/config.toml appget配置文件
 
 # app脚本文件
 * 一个app的name和filename必须是唯一的（推荐二者相同），否则出现同名app时会互相覆盖
