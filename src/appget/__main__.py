@@ -2,13 +2,13 @@
 
 import sys
 
-from . import appget, log
+from . import cli, log
 from .utils import DEBUG
 
 
 def main():
     try:
-        appget.cli()
+        cli.cli()
         return 0
     except Exception as err:
         if DEBUG:

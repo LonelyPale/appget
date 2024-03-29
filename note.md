@@ -52,6 +52,11 @@ pip install toml
 
 # 测试本地执行
 PYTHONPATH=./src python -m appget
+PYTHONPATH=./src python -m appget.temp
+sudo APPGET_MODE=debug PYTHONPATH=./src python -c "from appget import install; install()"
+sudo APPGET_MODE=debug PYTHONPATH=./src python -c "from appget import uninstall; uninstall()"
+
+
 PYTHONPATH=/usr/local/app/appget/lib python3 -m appget
 
 

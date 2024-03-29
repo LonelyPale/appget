@@ -4,7 +4,7 @@ import shutil
 
 from abc import ABC, abstractmethod
 
-from appget import log
+from appget import log, profile
 from appget.constant import *
 from appget.utils import copy_file_or_folder
 
@@ -26,6 +26,10 @@ class App(ABC):
             if not hasattr(self, key):
                 # 检查子类是否实现了必需的属性，子类的属性必须在调用父类的__init__方法前初始化
                 raise NotImplementedError(f'Subclasses must set "{key}"')
+            if key == 'name' and getattr(self, key) == '':
+                raise NotImplementedError(f'Subclasses must set "{key}" and non-empty')
+            if key == 'version' and getattr(self, key) == '':
+                raise NotImplementedError(f'Subclasses must set "{key}" and non-empty')
 
     @abstractmethod
     def install(self):
@@ -64,3 +68,16 @@ class App(ABC):
         module_file = module.__file__
         script_name = os.path.basename(module_file)[:-3]
         return script_name, module_file
+
+    def add_profile(self, content):
+        """添加 app script 到 .profile 文件"""
+        if content == '':
+            return
+        appname = getattr(self, 'name')
+        profile.app_profile_install(appname, content)
+
+    def del_profile(self):
+        """从 .profile 文件删除 app script"""
+        appname = getattr(self, 'name')
+        profile.app_profile_uninstall(appname)
+
