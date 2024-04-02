@@ -8,7 +8,7 @@ from appget.system import is_linux, is_darwin
 # 在linux中，一般情况下.profile中会导入.bashrc，
 # .bashrc是每次打开一个新的终端窗口（bash shell）时都会执行的文件。
 # .profile是登录(login)时执行的文件，即当用户登录时会执行一次。
-PROFILE_LINUX = ['~/.bashrc']
+PROFILE_LINUX = ['~/.bashrc', '/home/plotter/.bashrc']
 
 # .bash_profile文件是macOS系统中Bash shell的默认登录脚本。
 PROFILE_DARWIN = ['~/.bash_profile']

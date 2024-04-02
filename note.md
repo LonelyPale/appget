@@ -59,6 +59,8 @@ sudo APPGET_MODE=debug PYTHONPATH=./src python -c "from appget import uninstall;
 
 PYTHONPATH=/usr/local/app/appget/lib python3 -m appget
 
+# 目录内文件行数统计
+find ./src -name "*.py" -type f -exec wc -l {} +
 
 
 
