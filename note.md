@@ -49,6 +49,9 @@ pip install colorama
 pip install colorlog
 #配置文件toml
 pip install toml
+#HttpClient
+pip install requests
+
 
 # 测试本地执行
 PYTHONPATH=./src python -m appget

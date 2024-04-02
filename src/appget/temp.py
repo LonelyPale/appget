@@ -31,7 +31,15 @@ def b():
     print(matches)
 
 
+def c():
+    from tempfile import TemporaryDirectory
+
+    # 创建一个临时目录
+    with TemporaryDirectory() as d:
+        print('Temporary directory:', d)
+        # 在这里使用临时目录
+    # 目录在with块结束后自动删除
 
 
 if __name__ == '__main__':
-    b()
+    c()

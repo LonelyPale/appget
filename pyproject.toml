@@ -22,6 +22,7 @@ dependencies = [# Optional
     "click~=8.1.7", #命令行解析
     "colorama~=0.4.6", #命令行着色
     "colorlog~=6.8.2", #日志着色
+    "requests~=2.31.0", #HttpClient
 ]
 
 [project.urls]

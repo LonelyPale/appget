@@ -12,15 +12,15 @@ from appget.utils import copy_file_or_folder
 
 class App(ABC):
     __required_attributes = ['name', 'version', 'desc', 'license', 'homepage']
-    __info_attributes = ['name', 'version', 'desc', 'license', 'homepage', 'homepath']
+    __info_attributes = __required_attributes + ['homepath']
 
     def __init__(self):
         if self.__class__ is App:
             # 如果试图直接实例化基类，则抛出错误
             raise NotImplementedError('Cannot instantiate Base Class <App> directly')
         self.__check_required_attribute()
-        self.home_path = os.path.join(APP_HOME, getattr(self, 'name'))
-        self.install_path = os.path.join(self.home_path, getattr(self, 'version'))
+        self.homepath = os.path.join(APP_HOME, getattr(self, 'name'))
+        self.install_path = os.path.join(self.homepath, getattr(self, 'version'))
         self.bin_path = os.path.join(self.install_path, 'bin')
         self.script_name, self.script_path = self.__script_name_and_path()
 
@@ -36,16 +36,16 @@ class App(ABC):
 
     @abstractmethod
     def install(self):
-        target_path = f'{self.home_path}/.appget'
+        target_path = f'{self.homepath}/.appget'
         copy_file_or_folder(self.script_path, target_path)
 
     @abstractmethod
     def uninstall(self):
         appname = getattr(self, 'name')
-        if self.home_path.endswith(appname):
-            shutil.rmtree(self.home_path)
+        if self.homepath.endswith(appname):
+            shutil.rmtree(self.homepath)
         else:
-            log.error(f'Invalid homepath: appname={appname} homepath={self.home_path}')
+            log.error(f'Invalid homepath: appname={appname} homepath={self.homepath}')
 
     def info(self):
         self.__display_attributes(self.__info_attributes)

@@ -1,6 +1,8 @@
 import os
 import shutil
 
+import requests
+
 from appget import log
 
 # develop
@@ -21,3 +23,17 @@ def copy_file_or_folder(source, destination):
         shutil.copytree(source, destination, dirs_exist_ok=True)
     else:
         log.error("Error: {} is not a valid file or directory".format(source))
+
+
+def download(url, destination):
+    try:
+        log.info(f'Downloading: {url}')
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(destination, 'wb') as f:
+                f.write(response.content)
+            log.info(f'Downloaded and saved: {destination}')
+        else:
+            log.error(f'Download failed with status code: {response.status_code}')
+    except Exception as e:
+        log.error(f'Download failed: {e}')
